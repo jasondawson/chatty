@@ -1,56 +1,29 @@
-var http = require('http');
+var express = require('express');
+var bodyParser = require('body-parser');
 var port = 8834;
-
 var messages = [];
+var app = express();
+app.use(bodyParser());
 
-var onRequest = function(req, res) {
+app.use(function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+	next();
+})
 
-	if (req.method === 'GET') {
-		res.writeHead(200, {
-			'Connection': 'close',
-			'Content-Type': 'application/json',
-			'Access-Control-Allow-Origin': '*'
-		});
-		res.end(JSON.stringify(messages));
-	}
+app.get('/', function(req, res) {
+	res.type('application/json');
+	res.json(messages);
+});
 
-	if (req.method === 'POST') {
-		var postData = '';
-		req.on('data', function(chunk) {
-			postData += chunk.toString();
-		});
-		req.on('end', function() {
-			console.log("Got POST data: ");
-			console.log(JSON.parse(postData));
-			message = JSON.parse(postData);
-			timestamp = new Date();
-			messages.push({'text': message.text,
-							'name': message.name,
-						'created': timestamp});
+app.post('/', function(req, res) {
+	timestamp = new Date();
+	messages.push({'text': req.body.text,
+	    			'name': req.body.name,
+					'created': timestamp});
+	res.json(messages);
+})
 
-			res.writeHead(200, {
-				'Connection': 'close',
-				'Content-Type': 'text/html',
-				'Access-Control-Allow-Origin': '*'
-			});
-			res.end(JSON.stringify(messages));
-
-		});
-
-
-	}
-
-	if (req.method === 'OPTIONS') {
-		res.writeHead(200, {
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'OPTIONS, GET, POST',
-			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept' 
-		})
-		res.end();
-	}
-
-}
-
-
-http.createServer(onRequest).listen(port);
-console.log('Listening on port: ' + port);
+app.listen(port);
+console.log('Listening on port ' + port);
