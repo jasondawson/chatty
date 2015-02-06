@@ -1,8 +1,26 @@
+<div ng-controller="MessageCtrl as vm">
+
 <div class="header">
   <h3 class="text-muted">chatty</h3>
 </div>
 
+
+<form>
+<input type="text pull-left" ng-model="vm.username" placeholder="Name" />
+<input type="text pull-left" ng-model="vm.chatInput" placeholder="Chat with chatty!" ng-keyup="$event.keyCode == 13 && vm.addMessage()" />
+</form>
+<br />
+
+
+
 <h4>Latest Chats:</h4>
 <div class="jumbotron">
-
+		<div class="message-container" ng-repeat="message in vm.messages track by $index">
+			<div class="pull-left"> {{message.name}}: {{  message.text  }}
+			</div>
+			<div class="pull-right">  {{message.created | date : 'medium'}}
+			</div>
+			<br class="clear" />
+		</div>
+</div>
 </div>

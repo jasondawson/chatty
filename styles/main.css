@@ -77,3 +77,34 @@ body {
     border-bottom: 0;
   }
 }
+
+.pull-left {
+  text-align: left;
+  width: 70%;
+  float: left;
+  display: inline-block;
+}
+
+.pull-right {
+  width: 30%;
+  float: right;
+  display: inline-block;
+}
+
+.clear {
+  clear: both;
+}
+
+.message-container {
+  padding: 2px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 2px;
+}
+
+.tiny-hidden {
+  height: 0;
+  width: 0;
+  border: none;
+  padding: 0;
+}
